@@ -1,1 +1,4 @@
-baseurl: /zhushuanglord.github.io
+permalink: /:title.html
+markdown: rdiscount
+pygments: true
+redirects: yes
