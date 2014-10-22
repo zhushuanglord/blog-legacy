@@ -3,57 +3,15 @@
 
   <head>
   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<style type="text/css" >
-#nav {       
-height:26px;
-border-bottom:2px solid grey;
-margin-top: 100px;
-}
-
-#nav li {      /*针对列表项，去除列表前面的样式，并使之浮动定位，形成横向导航条*/
-float:left;
-list-style-type:none;
-}
-
-#nav li a {     /*将导航文字作为块级元素，使之可以像一个方块按钮一样去运作，对之进行样式设计*/
-
-color:#000;
-text-decoration:none;
-padding-top:4px;
-display:block;
-width:97px;
-height:22px;
-text-align:center;
-background-color:#eee;
-margin-left:2px;
-}
-
-#nav li a:hover{ 
-background-color:#bbb;
-color:#fff;
-}
-
-
-</style>  
-
-
   <title>{{ page.title }}</title>
   </head>
     
   <body>
     
-   <div style = "width: 40%; margin: auto;">
+   <div style = "width: 40%; margin: auto ;margin-top: 100px">
     
-	<ul id="nav">
-	<li><a href="/dota.html">刀塔</a></li>
-	<li><a href="/fuck.html">捣鼓</a></li>
-	<li><a href="/love.html">矫情</a></li>
-	<li><a href="/about.html">关于</a></li>
-	</ul>
-
 	{{ content }}
-  
-
+ 
    </div>
 
 
