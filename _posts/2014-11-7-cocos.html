@@ -1,0 +1,16 @@
+---
+layout: default
+title: 初の学习cocos2d-x
+---
+
+{{ page.title }}
+<br />
+看了几天cocos,讲讲心得.
+cocos2d-x框架跨平台,C++实现后,框架便可以自动生成各种平台适应性应用,非常方便.而且,框架自身也封装好了各种游戏实用的API,更巧妙的事,他还想jav一样编写了自己的内存回收机制,这样我开始接触的时候就少了一件麻烦事了,可以专注在内容上.
+<br />
+框架的理解,框架中所有东西都可以看做是节点(nod),这跟面向对象的思想十分吻合.框架实际上是一种FPS系统.director导演安排这一切,它负责布局电影的场景(scene),场景中也会有一些光啊背景(Layer),背景中就会存在小精灵(sprite),小精灵的身上会伴随这一些动作(action).
+不难看出,他就像一个分层级的树形结构.
+<br />
+当然这些都是基础中的基础,下面就该学习一些高级效果技巧了,动画(animat),粒子等等.
+
+<p style = "border-top:2px solid grey; margin-top: 20px; text-align: right;">{{ page.date | date_to_string }}</p>
