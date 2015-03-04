@@ -1,0 +1,32 @@
+---
+layout: default
+title: ride ROR first。
+---
+
+{{ page.title }}
+
+<b>1.Installing Rails</b><br>
+install <b>ruby sqlite3 gem</b> firstly and then<br>
+<b>$ gem install rails</b><br><br>
+
+<b>2.Create App</b><br>
+(a)$ rails new xxx
+(b)$ rails server    
+(c)http://localhost:3000
+
+<b>3.Say "Hello",Rails</b><br>
+(a)$ rails generate controller welcome index
+(b)$ vi app/views/welcome/index.html.erb
+
+<b>4.Setting Home Page</b><br>
+(a)$ vi config/routes.rb
+
+
+<b>5 Getting Up and Running</b><br>
+(a)$ vi config/routes.rb
+<b>resources :xxxs(PLURAL STYLE)
+(b)$ rails g controller xxxs
+(c)$ vi app/controllers/articles_controller.rb
+(d)$ vi views/articles/new.html.erb
+
+<p style = "border-top:2px solid grey; margin-top: 20px; text-align: right;">{{ page.date | date_to_string }}</p>
