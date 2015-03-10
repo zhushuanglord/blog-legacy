@@ -1,6 +1,6 @@
 ---
 layout: default
-title: vim常用
+title: ROR教程-ActiveRecord
 ---
 
 {{ page.title }}
@@ -15,6 +15,206 @@ title: vim常用
 <li>数据库迁移，验证，回调（migrations, validations and callbacks.）的概念
 <br><br>
 
+<h2>1 何为ActiveRecord</h2><br>
+ActiveRecord是“MVC”中的“M”-Model，是系统中负责展现业务数据和逻辑的那一层。ActiveRecord使得创建和存储对象永久数据到数据库十分方便。ActiveRecord本身就是对ORM对象关系映射的一种描述和实现。<br>
+<h3>1.1 ActiveRecord模式</h3><br>
+在ActiveRecord中对象有数据持久存储和数据操作行为两部分。ActiveRecord主张，确保数据逻辑是数据的一部分以方便用户容易知道如何读写数据库。<br>
+<h3>1.2 Object Relational Mapping对象关系型映射</h3><br>
+ORM对象关系型映射，就是通常被被所提及的缩写形式ORM，它是一门将应用中的丰富对象与关系型数据库管理系统中的表（table）联系起来的技术。使用ORM，对象在应用中的属性和关系能容易的存储，并且能从数据库中检索而不用直接写SQL语句和更少的和数据库直接对话的代码。<br>
+<h3>1.3 作为ORM框架的ActiveRecord</h3><br>
+ActiveRecord给我们提供了一些机制，最重要的如下：<br>
+<li>展现模型和他们的数据</li>
+<li>展现模型之间的关联</li>
+<li>展现模型之间的继承层次</li>
+<li>在存入数据库之前的验证(Validate)功能</li>
+<li>以一种面向对象的方式操作数据库</li>
+
+<h2>2 ActiveREcord中的公约</h2><br>
+当用其它的框架或语言写应用时，可能会写很多配置代码。尤其是在ORM对象关系映射框架中很常见。但是，如果你采用Rails采用的公约，当你创建ActiveRecord模型时只需写极少的配置（有些情况甚至没有配置文件）。这个想法是基于当你大多数时间用同一种方式配置你的应用，所以他们都是默认的。因此，只有当你不想使用标准公约的时候才需要进行详细的配置。<br>
+<h3>2.1 命名公约</h3><br>
+默认地，ActiveRecord使用一些命名公约，来展现model和数据库table之间映射是如何创建的。Rails将会使你的class名复数化来找到你相对应的数据库表。因此，与类书（class book）相对应的，你应该有一本数据库表（database book）称为<b>books</b>（注意为复数形式）。Rails的复数化机制非常强大，可复数化（或单数化）任意规则或不规则单词。当使用的类名由两个或更多单词构成，model的类名应该使用Ruby公约，使用CamelCase（驼峰大小写）格式，但是表（table）名全部小写，且用下划线（underscore）隔开。例如：<br>
+<li>Model Class - 单数且每个单词首字母大写 e.g., BookClub</li>
+<li>Database Table - 复数且全小写 e.g., book_clubs</li>
+<table>
+  <tr>
+    <th>Model/Class</th>
+    <th>Table/Schema</th>
+  </tr>
+  <tr>
+    <td>Article</td><td>articles</td>
+    <td>LineItem</td><td>line_items</td>
+    <td>Deer</td><td>deers</td>
+    <td>LittleMouse</td><td>little_mice</td>
+    <td>Person</td><td>people</td>
+  </tr>
+
+<h3>2.2 Schema(模式)公约</h3><br>
+ActiveRecord对数据库中的表使用命名公约，
+<li>Foreign keys - 这些域的命名应该按如下模式singularized_table_name_id (e.g., <b>item_id</b>, order_id)，当你创建models之间的关联时，ActiveRecord会查询你的这些域。</li>
+<li>Primary keys - 默认的，ActiveRecord将用整数列命名id作为表的主键。但你使用<b> Active Record Migrations</b>来创建table时，这些列将被自动创建。</li>
+<br>
+这里也有一些其他的可选列属性，用来添加ActiveRecord实例其他的特性：<br>
+<li>created_at - 自动获取设置record首次创建日期和时间</li>
+<li>updated_at - 自动获取设置record更新的时间日期</li>
+<li>lock_version - 添加 optimistic locking(乐观锁 - 版本号，提高吞吐量) 到一个model</li>
+<li>type - 指定该模型使用单表继承</li>
+<li>(association_name)_type - 多关联存储模型</li>
+<li>(table_name)_count - 用来缓存属于关联对象的数目。例如，comments_count 列在Articles类中。每个article有很多comment将会被缓存</li>
+
+<h2>3 创建ActiveRecord模型</h2><br>
+创建ActiveRecord模型非常的简单，你只需要继承ActiveRecord::Base就可以开始了：
+
+<i>
+class Product < ActiveRecord::Base<br>
+end
+</i><br>
+这将会创建一个Product模型，映射到products表到数据库，通过这样做你也可以将每一行的列标对应到每个模型实例的属性。假设创建products表的SQL语句如下：
+<i>
+CREATE TABLE products (<br>
+   id int(11) NOT NULL auto_increment,<br>
+   name varchar(255),<br>
+   PRIMARY KEY  (id)<br>
+);<br>
+</i><br>
+
+根据以上表的模式，你可以像如下模式编码：
+<i>
+p = Product.new<br>
+p.name = "Some Book"<br>
+puts p.name # "Some Book"<br>
+</i>
+
+<h2>4 重写命名公约</h2><br>
+如果你想将Rails应用建立在一个遗留的数据库上从而要改写默认命名公约，没问题，重写默认命名公约很简单。<br>
+你可以使用<i> ActiveRecord::Base.table_name= </i>方法来修改他。例如：<br>
+<i>
+class Product < ActiveRecord::Base<br>
+  self.table_name = "PRODUCT"<br>
+end<br>
+</i> 
+如果你这么做，你将不得不手动定义类名（class_name.yml）使用 set_fixture_class 方法：
+<i>
+class FunnyJoke < ActiveSupport::TestCase<br>
+  set_fixture_class funny_jokes: Joke<br>
+  fixtures :funny_jokes<br>
+  ...<br>
+end<br>
+</i>
+详情见官网。
+
+<h2>5 CRUD:读和写数据</h2><br>
+CRUD是我们操作数据的4个动词的缩写：<b>Create</b>,<b>Read</b>,<b>Update</b>,<b>Delete</b>.ActiveRecord自动创建方法来使应用能读写操作数据到对应的表中。<br>
+
+<h3>5.1 Create</h3><br>
+ActiveRecord对象可以创建到hash结构，block结构，或者在创建后手动设置。new方法将会返回一个new对象，然后create将返回这个对象，然后save这个对象到数据库。<br>
+
+例如，给定一个模块User有属性name和occupation，使用create方法将会create和save一个新的record到数据库中。例如：
+<i>
+user = User.create(name: "David", occupation: "Code Artist")
+</i><br>
+
+使用new方法，实例化一个对象，但没有存储。例如：
+<i>
+user = User.new<br>
+user.name = "David"<br>
+user.occupation = "Code Artist"<br>
+</i>
+调用 user.save 将会提交record到数据库。<br><br>
+最后，如果提供block块，creaete和new都可将新的对象提交给block用来初始化。<br>
+<i>
+user = User.new do |u|<br>
+  u.name = "David"<br>
+  u.occupation = "Code Artist"<br>
+end<br>
+</i>
+
+<h3>5.2 Read</h3><br>
+ActiveRecord提供了丰富的数据读取API，一些列出了一些不同读取方法的例子：<br>
+<i>
+# return a collection with all users<br>
+users = User.all<br>
+<br>
+# return the first user<br>
+user = User.first<br>
+<br>
+# return the first user named David<br>
+david = User.find_by(name: 'David')<br>
+<br>
+# find all users named David who are Code Artists and sort by created_at in reverse chronological order<br>
+users = User.where(name: 'David', occupation: 'Code Artist').order('created_at DESC')<br>
+<br>
+</i>
+
+更多详情见官方文档。<br>
+
+<h3>5.3 Update</h3><br>
+一旦ActiveRecord被检索，他的属性将被修改并且可以存到数据库：<br>
+<i>
+user = User.find_by(name: 'David')<br>
+user.name = 'Dave'<br>
+user.save<br>
+</i><br>
+或者简单一点：<br>
+<i>
+user = User.find_by(name: 'David')<br>
+user.update(name: 'Dave')<br>
+</i>
+<br>
+当需要一次更新几个属性的时候，一下这个最有用update_all:<nr>
+<i>
+User.update_all "max_login_attempts = 3, must_change_password = 'true'"<br>
+</i>
+
+<h3>5.4 Delete</h3><br>
+<i>
+user = User.find_by(name: 'David')<br>
+user.destroy<br>
+</i>
+<br>
+
+<h2>6 Validations验证</h2><br>
+ActiveRecord允许你，在写入数据库之前验证一个model的状态，这里有一些方法可以用来检验你的模型，验证一个属性值是否为空，是否唯一，是否已经存在于数据库，是否按照特定的格式等更多。<br>
+维护数据库时，Validation（验证）是非常值得考虑的重要事情，所以，当在执行save和update方法都会考虑在内，当验证失败时他们会返回false，而并不会对数据库有任何操作。所有的这些都有完美的对应（that is, save! and update!返回失败信息）例如：<br>
+<i>
+class User < ActiveRecord::Base<br>
+  validates :name, presence: true<br>
+end<br>
+ <br>
+user = User.new<br>
+user.save  # => false<br>
+user.save! # => ActiveRecord::RecordInvalid: Validation failed: Name can't be blank<br>
+</i><br>
+
+<h2>7 Callbacks回调</h2><br>
+ActiveRecord 回调允许你在models的生命周内一定事件上附上代码。这就使得当你操作model遇到特定的事件就会执行相应代码，比如create a new record, update it, destroy it 等等。
+
+<h2>8 Migrations 迁移</h2><br>
+Rails提供一个特定领域的语言用来管理database schema（数据库模型），名叫migrations。例如：<br>
+<i>
+class CreatePublications < ActiveRecord::Migration<br>
+  def change<br>
+    create_table :publications do |t|<br>
+      t.string :title<br>
+      t.text :description<br>
+      t.references :publication_type<br>
+      t.integer :publisher_id<br>
+      t.string :publisher_type<br>
+      t.boolean :single_issue<br>
+ <br>
+      t.timestamps null: false<br>
+    end<br>
+    add_index :publications, :publication_type_id<br>
+  end<br>
+end<br>
+</i>
+<br>
+Rails同时提供回滚的功能。创建表执行 <i>rake db:migrate </i>,回滚的时候执行<i>rake db:rollback </i><br>
+值得一提的是以上代码是<b>跨数据库</b>的,他将可以运行在MySQL, PostgreSQL, Oracle 以及其他。
+<br>
+
+<div style="color: red">
+<a href="http://guides.rubyonrails.org/active_record_basics.html">官方文档</a>
+</div>
 
 
 <p style = "border-top:2px solid grey; margin-top: 20px; text-align: right;" >{{ page.date | date_to_string }}</p>
