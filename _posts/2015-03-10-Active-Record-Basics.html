@@ -35,18 +35,14 @@ ActiveRecord给我们提供了一些机制，最重要的如下：<br>
 默认地，ActiveRecord使用一些命名公约，来展现model和数据库table之间映射是如何创建的。Rails将会使你的class名复数化来找到你相对应的数据库表。因此，与类书（class book）相对应的，你应该有一本数据库表（database book）称为<b>books</b>（注意为复数形式）。Rails的复数化机制非常强大，可复数化（或单数化）任意规则或不规则单词。当使用的类名由两个或更多单词构成，model的类名应该使用Ruby公约，使用CamelCase（驼峰大小写）格式，但是表（table）名全部小写，且用下划线（underscore）隔开。例如：<br>
 <li>Model Class - 单数且每个单词首字母大写 e.g., BookClub</li>
 <li>Database Table - 复数且全小写 e.g., book_clubs</li>
-<table>
-  <tr>
-    <th>Model/Class</th>
-    <th>Table/Schema</th>
-  </tr>
-  <tr>
-    <td>Article</td><td>articles</td>
-    <td>LineItem</td><td>line_items</td>
-    <td>Deer</td><td>deers</td>
-    <td>LittleMouse</td><td>little_mice</td>
-    <td>Person</td><td>people</td>
-  </tr>
+<br>
+Model/Class  Table/Schema<br>
+Article      articles<br>
+LineItem     line_items<br>
+Deer         deers <br>
+LittleMouse  little_mice<br>
+Person       people<br>
+ 
 
 <h3>2.2 Schema(模式)公约</h3><br>
 ActiveRecord对数据库中的表使用命名公约，
